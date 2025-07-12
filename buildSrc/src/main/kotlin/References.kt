@@ -1,5 +1,6 @@
 import org.gradle.api.JavaVersion
 import java.util.Calendar
+import java.util.Properties
 
 /**
  * The package name of the application.
@@ -58,6 +59,34 @@ val mVersionCode = "${getYear()}${getMonth()}${getDay()}"
  * this will be "1.0.0 (20231025)".
  */
 val appFullVersion = "$appVersion ($mVersionCode)"
+
+/**
+ * Enum class representing Supabase properties.
+ *
+ * This enum defines the keys for various Supabase configuration settings,
+ * such as the project URL and public authentication key. Each property
+ * is associated with a unique string key used for accessing its value.
+ *
+ * @property key The string key associated with the Supabase property.
+ */
+enum class SupabaseProperties(val key: String) {
+
+    /**
+     * The URL of your Supabase project.
+     *
+     * This is the unique endpoint for accessing your Supabase backend services,
+     * such as the database, authentication, and storage.
+     * It typically looks like `https://<your-project-id>.supabase.co`.
+     */
+    SUPABASE_URL("SUPABASE_URL"),
+
+    /**
+     * The public key for Supabase authentication.
+     * This key is used to identify the application when interacting with Supabase services.
+     */
+    SUPABASE_PUBLIC_KEY("SUPABASE_PUBLIC_KEY")
+
+}
 
 /**
  * Retrieves the current year.

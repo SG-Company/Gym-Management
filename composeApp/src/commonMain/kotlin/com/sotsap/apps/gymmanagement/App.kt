@@ -22,6 +22,10 @@ import gymmanagement.composeapp.generated.resources.compose_multiplatform
 @Preview
 fun App() {
     MaterialTheme {
+        val supabaseKey = BuildKonfig.supabaseToken
+        val supabaseUrl = BuildKonfig.supabaseUrl
+        val appVersion = BuildKonfig.appVersion
+
         var showContent by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
@@ -29,8 +33,13 @@ fun App() {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+
+            Text(text = supabaseKey)
+            Text(text = supabaseUrl)
+            Text(text = appVersion)
+
             Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
+                Text("")
             }
             AnimatedVisibility(showContent) {
                 val greeting = remember { Greeting().greet() }

@@ -18,6 +18,10 @@ junit = "4.13.2"
 kotlin = "2.2.0"
 kotlinx-coroutines = "1.10.2"
 
+buildKonfig = "0.17.1"
+kotlinGradlePlugin = "1.9.0"
+
+# ? ------------------------------------------------------------------------------------------------
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
@@ -32,6 +36,12 @@ androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:life
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 
+# BuildKonfig gradle plugin
+buildkonfig-gradle-plugin = { module = "com.codingfeline.buildkonfig:buildkonfig-gradle-plugin", version.ref = "buildKonfig" }
+# Kotlin gradle plugin
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
+
+# ? ------------------------------------------------------------------------------------------------
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -39,3 +49,4 @@ composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "com
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+buildkonfig = { id = "com.codingfeline.buildkonfig" }
