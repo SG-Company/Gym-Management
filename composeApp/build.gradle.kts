@@ -100,3 +100,18 @@ compose.desktop {
         }
     }
 }
+
+val printSuccessMessage by tasks.registering {
+    doLast {
+        println("✅Build completed successfully!")
+    }
+}
+tasks.named("build") {
+    finalizedBy(printSuccessMessage)
+}
+
+
+
+
+
+
