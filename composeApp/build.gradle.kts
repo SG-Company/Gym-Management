@@ -1,6 +1,9 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec
+import com.codingfeline.buildkonfig.gradle.TargetConfigDsl
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,7 +11,32 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    alias(libs.plugins.buildkonfig)
 }
+
+
+// ? ===============================================================================================
+// ? gradle.properties - CI/CD script
+// ? ===============================================================================================
+val supabasePublicKeyProvider: String by lazy { getSecret(key = SupabaseProperties.SUPABASE_PUBLIC_KEY.key) }
+val supabaseUrlProvider: String by lazy { getSecret(key = SupabaseProperties.SUPABASE_URL.key) }
+// ? ------------------------------
+
+fun getSecret(key: String): String {
+    // 1. Try local.properties (if it exists)
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        val props = Properties().apply {
+            load(localPropertiesFile.inputStream())
+        }
+        props.getProperty(key)?.let { return it }
+    }
+    // 2. Fallback to environment variable (CI/CD)
+    return System.getenv(key)
+        ?: throw GradleException("Missing property: $key. " +
+                "Provide it in local.properties or as an environment variable.")
+}
+// ? ===============================================================================================
 
 kotlin {
     androidTarget {
@@ -37,6 +65,10 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.okhttp)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -47,6 +79,13 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.contentNegotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.kotlinx.serialization.core)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.bundles.supabase)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -110,8 +149,45 @@ tasks.named("build") {
     finalizedBy(printSuccessMessage)
 }
 
+buildkonfig {
+    packageName = mPackageName
+    version = appVersion
+    defaultConfigs {
+        exposeAppVersion
+        exposeSupabaseUrl
+        exposeSupabaseToken
+    }
+}
 
+/**
+ * Exposes the application version as a build config field.
+ * This allows the application version to be accessed at runtime.
+ */
+val TargetConfigDsl.exposeAppVersion: Unit
+    get() = buildConfigField(
+        type = FieldSpec.Type.STRING,
+        name = "appVersion",
+        value = appVersion
+    )
 
+/**
+ * Exposes the Supabase URL as a build config field.
+ * This makes the Supabase URL available in the application code at runtime.
+ */
+val TargetConfigDsl.exposeSupabaseUrl: Unit
+    get() = buildConfigField(
+        type = FieldSpec.Type.STRING,
+        name = "supabaseUrl",
+        value = supabaseUrlProvider
+    )
 
-
-
+/**
+ * Exposes the Supabase token as a build config field.
+ * This makes the token accessible in the application code.
+ */
+val TargetConfigDsl.exposeSupabaseToken: Unit
+    get() = buildConfigField(
+        type = FieldSpec.Type.STRING,
+        name = "supabaseToken",
+        value = supabasePublicKeyProvider
+    )
