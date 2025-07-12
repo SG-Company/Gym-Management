@@ -1,5 +1,9 @@
 name: Build with Gradle
 
+env: 
+  SUPABASE_PUBLIC_KEY: ${{ secrets.SUPABASE_PUBLIC_KEY }}
+  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+  
 on:
   push:
     branches: [ dev ]
