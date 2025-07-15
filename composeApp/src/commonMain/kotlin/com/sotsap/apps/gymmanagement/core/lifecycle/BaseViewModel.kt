@@ -12,14 +12,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+
 /**
  * A base class for ViewModels that provides a structured way to manage state and events.
  *
  * This class uses Kotlin coroutines and [StateFlow] to handle asynchronous operations and UI updates.
- * It defines a generic state type [S] and event type [E] to be specified by subclasses.
+ * It defines a generic state type [S] and event type [I] to be specified by subclasses.
  *
  * @param S The type of the state managed by this ViewModel.
- * @param E The type of the events emitted by this ViewModel.
+ * @param I The type of the events emitted by this ViewModel.
  * @param initialize A boolean flag indicating whether the ViewModel should initialize its state immediately upon creation.
  *                   Defaults to `true`. If `true`, the [initialState] function will be called and its result
  *                   will be used to update the ViewModel's state.
@@ -29,8 +30,13 @@ import kotlinx.coroutines.launch
  * @property event A [StateFlow] that exposes events emitted by the ViewModel. UI components can observe this flow
  *                 to react to one-time events (e.g., navigation, showing a toast).
  */
-abstract class BaseViewModel<S, E>(initialize: Boolean = true): ViewModel() {
+abstract class BaseViewModel<S, I>(initialize: Boolean = true): ViewModel() {
 
+    /**
+     * A string constant used as a tag for the initialization job launched in the `init` block.
+     * This tag helps in identifying and managing the coroutine responsible for setting up
+     * the initial state of the ViewModel.
+     */
     private val tagInitializationJob = "Job-Initialization"
 
     /**
@@ -54,7 +60,7 @@ abstract class BaseViewModel<S, E>(initialize: Boolean = true): ViewModel() {
      *
      * The value is nullable, and it is `null` if no event has been emitted yet.
      */
-    private val _event = MutableStateFlow<E?>(null)
+    private val _event = MutableStateFlow<I?>(null)
 
     /**
      * A [MutableStateFlow] that holds the current event of the [BaseViewModel].
@@ -63,7 +69,7 @@ abstract class BaseViewModel<S, E>(initialize: Boolean = true): ViewModel() {
      *
      * The value is nullable, and it is `null` if no event has been emitted yet.
      */
-    val event: StateFlow<E?> = _event.asStateFlow()
+    val event: StateFlow<I?> = _event.asStateFlow()
 
     /**
      * The [Job] used to manage the lifecycle of coroutines launched by this ViewModel.
@@ -123,7 +129,7 @@ abstract class BaseViewModel<S, E>(initialize: Boolean = true): ViewModel() {
      *
      * @param newEvent The new event to be emitted.
      */
-    protected fun update(newEvent: E) = _event.tryEmit(newEvent)
+    protected fun update(newEvent: I) = _event.tryEmit(newEvent)
 
     /**
      * Stops a coroutine identified by the given [tag] if it is currently active.
@@ -159,7 +165,7 @@ abstract class BaseViewModel<S, E>(initialize: Boolean = true): ViewModel() {
     ) {
         // Tag should not be empty, so check it
         if (tag.isEmpty()) {
-            Logger.error<BaseViewModel<S, E>>(
+            Logger.error<BaseViewModel<S, I>>(
                 tag = "launch coroutine",
                 message = "Tag should not be empty"
             )
@@ -169,7 +175,7 @@ abstract class BaseViewModel<S, E>(initialize: Boolean = true): ViewModel() {
         stopCoroutine(tag)
         // search for the job with the same tag
         if (jobs.isNotEmpty() && jobs.containsKey(tag)) {
-            Logger.error<BaseViewModel<S, E>>(
+            Logger.error<BaseViewModel<S, I>>(
                 tag = "launch coroutine",
                 message = "Tag should not be identical to another job"
             )

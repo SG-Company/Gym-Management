@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="LoginHeader">Gym Management</string>
+    <string name="LoginSubtitle">Login</string>
+    <string name="LoginEmailPlaceholder">Email</string>
+    <string name="LoginPasswordPlaceholder">Password</string>
+    <string name="LoginCTA">Login</string>
+</resources>
