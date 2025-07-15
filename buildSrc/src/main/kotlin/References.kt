@@ -1,6 +1,5 @@
 import org.gradle.api.JavaVersion
 import java.util.Calendar
-import java.util.Properties
 
 /**
  * The package name of the application.
@@ -21,6 +20,14 @@ const val appVersion = "1.0.0"
  * The version of the desktop application.
  */
 const val desktopVersion = "1.0.0"
+
+/**
+ * The build number for the release version of the application.
+ *
+ * This constant is used to differentiate between different builds of the same release version.
+ * It is typically a two-digit string, incremented for each new build.
+ */
+const val releaseBuildNumber = "01"
 
 /**
  * Converts a string representation of a Java version to its corresponding [JavaVersion] enum.
@@ -50,15 +57,17 @@ fun String.toJavaVersion() = when (this) {
  */
 val mVersionCode = "${getYear()}${getMonth()}${getDay()}"
 
+
 /**
- * The full version of the application, combining the [appVersion] and [mVersionCode].
+ * The full version of the application, combining the [appVersion], [mVersionCode], and a potential release build number.
  *
- * This property creates a string that includes both the human-readable application version
- * and the unique version code, formatted as "appVersion (versionCode)".
- * For example, if [appVersion] is "1.0.0" and [mVersionCode] is "20231025",
- * this will be "1.0.0 (20231025)".
+ * This property creates a string that includes the human-readable application version,
+ * the unique version code, and an optional release build number, formatted as
+ * "appVersion (versionCode[releaseBuildNumber])".
+ * For example, if [appVersion] is "1.0.0", [mVersionCode] is "20231025", and `releaseBuildNumber` (if present) is "01",
+ * this will be "1.0.0 (2023102501)". If `releaseBuildNumber` is empty, it will be "1.0.0 (20231025)".
  */
-val appFullVersion = "$appVersion ($mVersionCode)"
+val appFullVersion = "$appVersion ($mVersionCode$releaseBuildNumber)"
 
 /**
  * Enum class representing Supabase properties.
