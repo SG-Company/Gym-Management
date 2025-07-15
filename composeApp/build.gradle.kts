@@ -14,7 +14,6 @@ plugins {
     alias(libs.plugins.buildkonfig)
 }
 
-
 // ? ===============================================================================================
 // ? gradle.properties - CI/CD script
 // ? ===============================================================================================
@@ -65,6 +64,8 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.koin.androidx.compose)
+            implementation(libs.koin.android)
             implementation(libs.ktor.client.okhttp)
         }
         iosMain.dependencies {
@@ -85,6 +86,9 @@ kotlin {
             implementation(libs.ktor.client.logging)
             implementation(libs.kotlinx.serialization.core)
             implementation(libs.kotlinx.serialization.json)
+            api(libs.koin.core)
+            api(libs.koin.compose)
+            api(libs.koin.compose.viewmodel)
             implementation(libs.bundles.supabase)
         }
         commonTest.dependencies {
@@ -142,7 +146,7 @@ compose.desktop {
 
 val printSuccessMessage by tasks.registering {
     doLast {
-        println("✅Build completed successfully!")
+        println("✅ Build completed successfully!")
     }
 }
 tasks.named("build") {
