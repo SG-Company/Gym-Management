@@ -153,14 +153,14 @@ abstract class BaseViewModel<S, I>(initialize: Boolean = true): ViewModel() {
      * If a coroutine with the same tag is already running, it will be stopped before the new one starts.
      *
      * @param tag Unique identifier for the coroutine. Must not be empty.
-     * @param dispatcher The [CoroutineDispatcher]. Defaults to [Dispatchers.IO].
+     * @param dispatcher The [CoroutineDispatcher]. Defaults to [Dispatchers.Main].
      * @param action The suspend function to execute.
      *
      * @since 0.0.4
      */
     protected fun launch(
         tag: String = "",
-        dispatcher: CoroutineDispatcher = Dispatchers.IO,
+        dispatcher: CoroutineDispatcher = Dispatchers.Main,
         action: suspend () -> Unit
     ) {
         // Tag should not be empty, so check it

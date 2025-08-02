@@ -15,6 +15,8 @@ import org.jetbrains.compose.resources.StringResource
  */
 data class LoginState(
     val progress: Boolean = false,
+    val username: String = "",
+    val password: String = "",
     val wordings: Wordings,
     val error: Error = Error()
 ) {

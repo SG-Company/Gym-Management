@@ -1,6 +1,8 @@
 package com.sotsap.apps.gymmanagement.di
 
 import com.sotsap.apps.gymmanagement.core.di.BaseDi
+import com.sotsap.apps.gymmanagement.features.login.data.LoginRepository
+import com.sotsap.apps.gymmanagement.features.login.domain.LoginRepositoryImpl
 import com.sotsap.apps.gymmanagement.features.login.presentation.LoginViewModel
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
@@ -46,5 +48,6 @@ fun initKoin(app: KoinApplication.() -> Unit = {}) = BaseDi.setup {
  */
 private val loginDi: Module
     get() = module {
-        factory { LoginViewModel() }
+        single<LoginRepository> { LoginRepositoryImpl() }
+        factory { LoginViewModel(get()) }
     }

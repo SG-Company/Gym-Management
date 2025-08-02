@@ -91,6 +91,7 @@ kotlin {
             api(libs.koin.compose.viewmodel)
             implementation(libs.backhandler)
             implementation(libs.navigation)
+            implementation(libs.material.icons.core)
             implementation(libs.bundles.supabase)
         }
         commonTest.dependencies {
