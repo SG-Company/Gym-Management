@@ -67,9 +67,11 @@ kotlin {
             implementation(libs.koin.androidx.compose)
             implementation(libs.koin.android)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.ui.backhandler)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.ui.backhandler)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -86,6 +88,8 @@ kotlin {
             implementation(libs.ktor.client.logging)
             implementation(libs.kotlinx.serialization.core)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.navigation.compose)
+
             api(libs.koin.core)
             api(libs.koin.compose)
             api(libs.koin.compose.viewmodel)

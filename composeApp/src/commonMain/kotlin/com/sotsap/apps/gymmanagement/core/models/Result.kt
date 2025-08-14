@@ -79,6 +79,33 @@ suspend fun <D, A, E: GenericError> Result<D, E>.ifSuccessAndThen(
 }
 
 /**
+ * Executes the given [action] if the [Result] is a [Result.Success] and the provided [condition] is met.
+ *
+ * This function allows for conditional execution of an action based on the data of a successful result.
+ * If the result is a [Result.Success] and the `condition` lambda returns `true` when applied to the success data,
+ * the `action` suspend lambda will be executed with that data, and its [Result] will be returned.
+ * If the result is an [Result.Error] or if the condition is not met, `null` is returned.
+ *
+ * @param D The type of the data in the original successful [Result].
+ * @param A The type of the data in the [Result] returned by the [action].
+ * @param E The type of the error, which must be a subtype of [GenericError].
+ * @param condition A lambda function that takes the success data [D] and returns a [Boolean] indicating whether the [action] should be executed.
+ * @param action A suspend lambda function that takes the success data [D] and returns a new [Result<A, E>].
+ * @return The [Result] returned by the [action] if the original [Result] was a [Result.Success] and the [condition] was met, otherwise `null`.
+ */
+suspend fun <D, A, E : GenericError> Result<D, E>.ifSuccessAndThenConditional(
+    condition: (D) -> Boolean,
+    action: suspend (D) -> Result<A, E>?
+): Result<A, E>? {
+    val isConditionMet = this is Result.Success && condition(data)
+    if (isConditionMet) {
+        return action(data)
+    }
+    return null
+}
+
+
+/**
  * Executes the given [action] if the [Result] is a [Result.Success] and returns the result of that action.
  *
  * This function is useful for chaining operations where the success of one operation determines whether the next one should be executed.

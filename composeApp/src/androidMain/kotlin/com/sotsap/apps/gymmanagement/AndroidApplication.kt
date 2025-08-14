@@ -9,11 +9,6 @@ import org.koin.core.component.KoinComponent
 abstract class AndroidApplication: Application(), KoinComponent {
 
     /**
-     * The Koin application instance.
-     */
-    private lateinit var koinApplication: KoinApplication
-
-    /**
      * Provides a standard set of Koin dependencies for an Android application.
      *
      * This function is designed to be used within a Koin application setup block.

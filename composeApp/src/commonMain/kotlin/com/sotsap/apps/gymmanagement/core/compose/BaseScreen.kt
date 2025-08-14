@@ -20,13 +20,13 @@ import org.koin.compose.viewmodel.koinViewModel
  * @param S The type of the state emitted by the ViewModel.
  * @param E The type of the event emitted by theViewModel.
  * @param V The type of the [BaseViewModel] associated with this screen.
- * @param enableLogs A boolean flag to enable or disable debug logging. Defaults to `false`.
+ * @param enableLogs A boolean flag to enable or disable debug logging. Defaults to `true`.
  * @param content A composable lambda that defines the UI content of the screen.
  *                It receives the current state (`S?`), event (`E?`), and the ViewModel instance (`V`).
  */
 @Composable
 inline fun <reified S, reified E, reified V: BaseViewModel<S, E>> BaseScreen(
-    enableLogs: Boolean = false,
+    enableLogs: Boolean = true,
     crossinline content: @Composable (state: S?, event: E?, viewModel: V) -> Unit
 ) {
 

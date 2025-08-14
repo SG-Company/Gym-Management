@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+
+    <!-- ======================================================================================= -->
+    <!-- Generics                                                                                -->
+    <!-- ======================================================================================= -->
+    <string name="textFieldRequiredText">*</string>
+
+
+    <!-- ======================================================================================= -->
+    <!-- Login screen                                                                            -->
+    <!-- ======================================================================================= -->
+    <string name="loginHeaderTitle">Gym Management</string>
+    <string name="loginHeaderSubtitle">Login</string>
+    <string name="loginEmailLabel">Email*</string>
+    <string name="loginPasswordLabel">Password*</string>
+    <string name="loginButtonText">Login</string>
+</resources>
