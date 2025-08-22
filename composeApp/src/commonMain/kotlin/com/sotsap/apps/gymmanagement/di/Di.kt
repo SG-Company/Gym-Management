@@ -6,6 +6,9 @@ import com.sotsap.apps.gymmanagement.features.initial.presentation.InitialViewMo
 import com.sotsap.apps.gymmanagement.features.login.data.LoginRepositoryImpl
 import com.sotsap.apps.gymmanagement.features.login.domain.LoginRepository
 import com.sotsap.apps.gymmanagement.features.login.presentation.LoginViewModel
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.dsl.module

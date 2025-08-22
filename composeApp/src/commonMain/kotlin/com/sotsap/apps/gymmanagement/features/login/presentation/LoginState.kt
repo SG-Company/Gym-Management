@@ -8,5 +8,8 @@ data class LoginState(
     val headerSubtitleText: StringResource,
     val emailLabelText: StringResource,
     val passwordLabelText: StringResource,
-    val loginButtonText: StringResource
+    val loginButtonText: StringResource,
+    val loginButtonEnabled: Boolean = false,
+    val emailErrorText: StringResource?,
+    val passwordErrorText: StringResource?
 )

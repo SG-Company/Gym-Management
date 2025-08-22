@@ -66,9 +66,10 @@ abstract class BaseViewModel<S, E>(initialize: Boolean = true): ViewModel() {
     val event: StateFlow<E?> = _event.asStateFlow()
 
     /**
-     * The [Job] used to manage the lifecycle of coroutines launched by this ViewModel.
+     * The [CoroutineDispatcher] used to launch coroutines within this ViewModel.
+     * Defaults to [Dispatchers.IO], which is suitable for I/O-bound operations.
      */
-    private var job: Job = Job()
+    val localDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     /**
      * A map of [Job]s used to manage the lifecycle of coroutines that may be launched from the ui layer.
@@ -147,14 +148,14 @@ abstract class BaseViewModel<S, E>(initialize: Boolean = true): ViewModel() {
      * If a coroutine with the same tag is already running, it will be stopped before the new one starts.
      *
      * @param tag Unique identifier for the coroutine. Must not be empty.
-     * @param dispatcher The [CoroutineDispatcher]. Defaults to [Dispatchers.IO].
+     * @param dispatcher The [CoroutineDispatcher]. Defaults to [localDispatcher].
      * @param action The suspend function to execute.
      *
      * @since 0.0.4
      */
     protected fun launch(
         tag: String = "",
-        dispatcher: CoroutineDispatcher = Dispatchers.IO,
+        dispatcher: CoroutineDispatcher = localDispatcher,
         action: suspend () -> Unit
     ) {
         // Tag should not be empty, so check it

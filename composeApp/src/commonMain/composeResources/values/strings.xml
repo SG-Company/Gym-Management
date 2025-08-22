@@ -15,4 +15,17 @@
     <string name="loginEmailLabel">Email*</string>
     <string name="loginPasswordLabel">Password*</string>
     <string name="loginButtonText">Login</string>
+
+    <string name="loginEmailInputFieldErrorEmpty">Email value is empty</string>
+    <string name="loginEmailInputFieldErrorEmailTemplate">Given value is not an email</string>
+
+    <!-- ======================================================================================= -->
+    <!-- App routes (Admin)                                                                      -->
+    <!-- ======================================================================================= -->
+    <string name="navigationAdminDashboardLabel">Home</string>
+    <string name="navigationAdminReceiptsLabel">Receipts</string>
+    <string name="navigationAdminMessagesLabel">Messages</string>
+    <string name="navigationAdminScheduleLabel">Schedule</string>
+    <string name="navigationAdminProfileLabel">Profile</string>
+
 </resources>

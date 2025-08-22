@@ -31,6 +31,8 @@ class InitialViewModel(
             .ifSuccess {
                 if (!it) {
                     update(newEvent = InitialEvent.NavigateToLogin)
+                } else {
+                    update(newEvent = InitialEvent.NavigateToHome)
                 }
             }
     }

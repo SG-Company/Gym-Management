@@ -12,4 +12,9 @@ sealed interface InitialEvent {
      */
     data object NavigateToLogin: InitialEvent
 
+    /**
+     * Event triggered when the home action is performed.
+     */
+    data object NavigateToHome: InitialEvent
+
 }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,9 +30,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import com.sotsap.apps.gymmanagement.core.compose.BaseScreen
+import com.sotsap.apps.gymmanagement.core.framework.components.button.GymButton
 import com.sotsap.apps.gymmanagement.core.framework.dimens.GymDimens
 import com.sotsap.apps.gymmanagement.core.framework.extensions.Insets
 import com.sotsap.apps.gymmanagement.core.framework.extensions.paddingInsets
+import com.sotsap.apps.gymmanagement.core.models.Route
 import gymmanagement.composeapp.generated.resources.Res
 import gymmanagement.composeapp.generated.resources.iconEmail
 import gymmanagement.composeapp.generated.resources.iconPasswordHide
@@ -44,10 +45,19 @@ import gymmanagement.composeapp.generated.resources.loginEmailLabel
 import gymmanagement.composeapp.generated.resources.loginHeaderSubtitle
 import gymmanagement.composeapp.generated.resources.loginHeaderTitle
 import gymmanagement.composeapp.generated.resources.loginPasswordLabel
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+
+/**
+ * Represents the Login scene, used for navigation purposes.
+ * This object is serializable, allowing it to be passed between different parts of the application,
+ * potentially for navigation or state saving.
+ */
+@Serializable
+object LoginScene: Route()
 
 /**
  * Composable function for the Login Screen.
@@ -62,8 +72,14 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    insets: PaddingValues
+    insets: PaddingValues,
+    onSuccessLogin: () -> Unit
 ) = BaseScreen<LoginState, LoginEvents, LoginViewModel> { state, event, viewModel ->
+
+    when (event) {
+        is LoginEvents.OnLogin -> onSuccessLogin()
+        else -> {}
+    }
 
     val email = rememberSaveable { mutableStateOf("") }
     val password = rememberSaveable { mutableStateOf("") }
@@ -72,9 +88,12 @@ fun LoginScreen(
         modifier = modifier,
         insets = insets,
         state = state,
-        initialEmail = email.value,
-        initialPassword = password.value,
-        onEmailChange = { email.value = it },
+        emailValue = email.value,
+        passwordValue = password.value,
+        onEmailChange = {
+            viewModel.onEmailChange(it)
+            email.value = it
+        },
         onPasswordChange = { password.value = it },
         onLogin = { viewModel.onLogin(email.value, password.value) }
     )
@@ -89,8 +108,8 @@ fun LoginScreen(
  * @param modifier The modifier to be applied to the layout.
  * @param insets The padding values representing the insets of the screen, used to adjust layout for system UI.
  * @param state The current state of the login screen, containing data like header titles.
- * @param initialEmail The initial email value for the login form.
- * @param initialPassword The initial password value for the login form.
+ * @param emailValue The email value
+ * @param passwordValue The password value
  * @param onEmailChange The callback to be invoked when the email input changes.
  * @param onPasswordChange The callback to be invoked when the password input changes.
  * @param onLogin The callback to be invoked when the login button is clicked.
@@ -100,8 +119,8 @@ private fun LoginContent(
     modifier: Modifier = Modifier,
     insets: PaddingValues,
     state: LoginState?,
-    initialEmail: String = "",
-    initialPassword: String = "",
+    emailValue: String = "",
+    passwordValue: String = "",
     onEmailChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
     onLogin: () -> Unit = {}
@@ -116,16 +135,19 @@ private fun LoginContent(
             InputFields(
                 emailLabel = state?.emailLabelText ?: Res.string.loginEmailLabel,
                 passwordLabel = state?.passwordLabelText ?: Res.string.loginPasswordLabel,
-                initialEmail = initialEmail,
-                initialPassword = initialPassword,
+                emailValue = emailValue,
+                passwordValue = passwordValue,
                 onEmailChange = onEmailChange,
-                onPasswordChange = onPasswordChange
+                onPasswordChange = onPasswordChange,
+                emailErrorLabel = state?.emailErrorText,
+                passwordErrorLabel = state?.passwordErrorText
             )
             Spacer(modifier = Modifier.weight(1f))
             CTAButton(
                 insets = insets,
                 text = state?.loginButtonText ?: Res.string.loginButtonText,
-                onClick = onLogin
+                onClick = onLogin,
+                isButtonEnabled = state?.loginButtonEnabled ?: false
             )
         }
     }
@@ -202,8 +224,10 @@ private fun Header(
  * @param modifier The modifier to be applied to the layout.
  * @param emailLabel The string resource for the email input field label.
  * @param passwordLabel The string resource for the password input field label.
- * @param initialEmail The initial value for the email input field.
- * @param initialPassword The initial value for the password input field.
+ * @param emailErrorLabel The string resource for the error message displayed when the email input is invalid.
+ * @param passwordErrorLabel The string resource for the error message displayed when the password input is invalid.
+ * @param emailValue The email value
+ * @param passwordValue The password value
  * @param onEmailChange Callback function invoked when the email input value changes.
  * @param onPasswordChange Callback function invoked when the password input value changes.
  */
@@ -212,8 +236,10 @@ private fun InputFields(
     modifier: Modifier = Modifier,
     emailLabel: StringResource,
     passwordLabel: StringResource,
-    initialEmail: String,
-    initialPassword: String,
+    emailErrorLabel: StringResource?,
+    passwordErrorLabel: StringResource?,
+    emailValue: String,
+    passwordValue: String,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit
 ) {
@@ -245,8 +271,14 @@ private fun InputFields(
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
-            value = initialEmail,
+            value = emailValue,
             onValueChange = onEmailChange,
+            isError = emailErrorLabel != null,
+            supportingText = {
+                if (emailErrorLabel != null) {
+                    Text(text = stringResource(resource = emailErrorLabel))
+                }
+            },
             placeholder = { Text(text = stringResource(resource = emailLabel)) },
             leadingIcon = {
                 Icon(
@@ -270,8 +302,14 @@ private fun InputFields(
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
-            value = initialPassword,
+            value = passwordValue,
             onValueChange = onPasswordChange,
+            isError = passwordErrorLabel != null,
+            supportingText = {
+                if (passwordErrorLabel != null) {
+                    Text(text = stringResource(resource = passwordErrorLabel))
+                }
+            },
             placeholder = { Text(text = stringResource(resource = passwordLabel)) },
             visualTransformation = if (isPasswordVisible.value) {
                 VisualTransformation.None
@@ -336,24 +374,15 @@ private fun CTAButton(
                 insets = insets
             )
     ) {
-        Button(
+        GymButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = GymDimens.paddingThirty)
                 .padding(bottom = GymDimens.paddingTwenty),
             enabled = isButtonEnabled,
             onClick = onClick,
-            shape = RoundedCornerShape(size = GymDimens.paddingTwenty)
-        ) {
-            Text(
-                modifier = Modifier
-                    .padding(vertical = GymDimens.paddingFive),
-                text = stringResource(resource = text),
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.Medium
-                )
-            )
-        }
+            text = stringResource(resource = text)
+        )
     }
 }
 
