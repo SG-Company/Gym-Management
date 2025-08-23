@@ -9,8 +9,8 @@ import com.sotsap.apps.gymmanagement.features.initial.presentation.InitialScene
 import com.sotsap.apps.gymmanagement.features.initial.presentation.InitialScreen
 import com.sotsap.apps.gymmanagement.features.login.presentation.LoginScene
 import com.sotsap.apps.gymmanagement.features.login.presentation.LoginScreen
-import com.sotsap.apps.gymmanagement.modes.admin.home.features.home.host.AdminHomeHostScreen
-import com.sotsap.apps.gymmanagement.modes.admin.home.features.home.host.AdminHomeScene
+import com.sotsap.apps.gymmanagement.modes.admin.home.features.home.host.presentation.AdminHomeHostScreen
+import com.sotsap.apps.gymmanagement.modes.admin.home.features.home.host.presentation.AdminHomeScene
 
 /**
  * Composable function that defines the navigation graph for the Gym Management application.

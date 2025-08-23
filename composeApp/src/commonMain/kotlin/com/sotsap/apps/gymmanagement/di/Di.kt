@@ -6,6 +6,8 @@ import com.sotsap.apps.gymmanagement.features.initial.presentation.InitialViewMo
 import com.sotsap.apps.gymmanagement.features.login.data.LoginRepositoryImpl
 import com.sotsap.apps.gymmanagement.features.login.domain.LoginRepository
 import com.sotsap.apps.gymmanagement.features.login.presentation.LoginViewModel
+import com.sotsap.apps.gymmanagement.modes.admin.home.features.home.host.presentation.AdminHomeHostViewModel
+import com.sotsap.apps.gymmanagement.modes.admin.home.navigation.adminHomeNavigationItems
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -42,7 +44,8 @@ fun initKoin() = startKoin {
  */
 private val KoinApplication.gymModules: KoinApplication get() = modules(
     initialModule,
-    loginModule
+    loginModule,
+    adminHostModule
 )
 
 /**
@@ -69,4 +72,13 @@ private val initialModule = module {
 private val loginModule = module {
     single<LoginRepository> { LoginRepositoryImpl() }
     factory { LoginViewModel(get() ) }
+}
+
+/**
+ * Defines the Koin module for the admin home host.
+ *
+ * This module provides the dependencies required for the admin home host screen.
+ */
+private val adminHostModule = module {
+    factory { AdminHomeHostViewModel() }
 }
