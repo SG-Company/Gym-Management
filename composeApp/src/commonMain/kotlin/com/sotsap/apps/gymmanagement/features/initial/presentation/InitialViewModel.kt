@@ -1,7 +1,7 @@
 package com.sotsap.apps.gymmanagement.features.initial.presentation
 
 import com.sotsap.apps.gymmanagement.core.lifecycle.BaseViewModel
-import com.sotsap.apps.gymmanagement.core.models.ifSuccess
+import com.sotsap.apps.gymmanagement.core.models.Response
 import com.sotsap.apps.gymmanagement.features.initial.domain.remote.InitialRepository
 
 /**
@@ -26,24 +26,16 @@ class InitialViewModel(
      * It's a placeholder for any initialization logic that might be needed in the future.
      */
     private fun initialize() = launch(tag = INITIALIZE) {
-        initialRepository
-            .isSessionActive()
-            .ifSuccess {
-                if (!it) {
-                    update(newEvent = InitialEvent.NavigateToLogin)
-                } else {
-                    update(newEvent = InitialEvent.NavigateToHome)
+        when (val response = initialRepository.isSessionActive()) {
+            is Response.Success -> {
+                when (response.data) {
+                    true -> update(newEvent = InitialEvent.NavigateToHome)
+                    false -> update(newEvent = InitialEvent.NavigateToLogin)
                 }
             }
+            is Response.Error -> { /* This request will never return an error */ }
+        }
     }
-
-
-
-
-
-
-
-
 
     /**
      * Initializes the state of the ViewModel by setting the initial state explicitly.

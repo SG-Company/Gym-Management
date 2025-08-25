@@ -11,9 +11,6 @@ import com.sotsap.apps.gymmanagement.supabase_events.admin.SupabaseAdminHostEven
  * This ViewModel manages the state and events for the main navigation container
  * within the admin section of the application. It handles user interactions
  * related to navigating between different admin features like Dashboard, Members, etc.
- *
- * @param S The state type for this ViewModel, aliased to [AdminHomeHostState].
- * @param E The event type for this ViewModel, aliased to [AdminHomeHostEvents].
  */
 class AdminHomeHostViewModel: BaseViewModel<AdminHomeHostState, AdminHomeHostEvents>() {
 

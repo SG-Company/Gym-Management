@@ -27,6 +27,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -57,16 +59,22 @@ import org.jetbrains.compose.resources.stringResource
 fun AdminHomeHostScreen() = BaseScreen<AdminHomeHostState, AdminHomeHostEvents, AdminHomeHostViewModel> { state, event, viewModel ->
 
     val navController = rememberNavController()
+    val hapticFeedback = LocalHapticFeedback.current
 
     Scaffold(
         bottomBar = {
             Column {
-                HorizontalDivider(
-                    thickness = 2.dp
-                )
+                HorizontalDivider(thickness = 2.dp)
                 NavigationBarProvider(
                     navController = navController,
-                    onItemClick = { viewModel.onNavigationItemSelected(item = it.route) }
+                    onItemClick = {
+                        viewModel.onNavigationItemSelected(item = it.route)
+                        if (it.route !is AdminHomeNavigation.Profile) {
+                            hapticFeedback.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
+                        } else {
+                            hapticFeedback.performHapticFeedback(HapticFeedbackType.ContextClick)
+                        }
+                    }
                 )
             }
         },
@@ -90,7 +98,6 @@ fun AdminHomeHostScreen() = BaseScreen<AdminHomeHostState, AdminHomeHostEvents, 
  * @param navController The [NavHostController] used to determine the current navigation route.
  * @param onItemClick An optional callback function to handle item clicks.
  */
-@Suppress("D")
 @Composable
 private fun NavigationBarProvider(
     navController: NavHostController,
@@ -237,6 +244,10 @@ private fun NavHostProvider(
         composable(route = AdminHomeNavigation.Receipts.route) { ReceiptAdminScreen() }
         composable(route = AdminHomeNavigation.Messages.route) { MessagesAdminScreen() }
         composable(route = AdminHomeNavigation.Schedule.route) { ScheduleAdminScreen() }
-        composable(route = AdminHomeNavigation.Profile.route) { ProfileAdminScreen() }
+        composable(route = AdminHomeNavigation.Profile.route) {
+            ProfileAdminScreen(
+                onLogout = {}
+            )
+        }
     }
 }

@@ -6,7 +6,16 @@ typealias GenericError = Error
  * Represents an error that occurred during an operation.
  * This interface can be implemented by specific error types to provide more detailed information.
  */
-interface Error
+interface Error {
+
+    /**
+     * The error message associated with this error, providing a human-readable description of the problem.
+     * This property should be implemented by concrete error types to offer specific details about the error that occurred.
+     */
+    val errorMessage: String?
+        get() = null
+
+}
 
 /**
  * Represents the result of an operation that can either succeed with data [D] or fail with an error [E].

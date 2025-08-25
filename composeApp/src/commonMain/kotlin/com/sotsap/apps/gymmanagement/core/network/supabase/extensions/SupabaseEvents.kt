@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.sotsap.apps.gymmanagement.core.network.supabase.models.SupabaseEvent
 import com.sotsap.apps.gymmanagement.core.network.supabase.models.SupabasePostableEvent
 import com.sotsap.apps.gymmanagement.core.network.supabase.supabaseClient
+import com.sotsap.apps.gymmanagement.core.utilities.AppConfig
 import com.sotsap.apps.gymmanagement.core.utilities.Logger
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.Dispatchers
@@ -108,6 +109,10 @@ fun ViewModel.sendEvent(
     property4: String = "",
     property5: String = "",
 ) {
+    if (AppConfig.DEBUG) {
+        Logger.logDebug("Application is in debug mode...event will not be sent", TAG_SEND_EVENT)
+        return
+    }
     // convert to postable event in order to match the database field names
     val postableEvent = toPostable(
         event = event,

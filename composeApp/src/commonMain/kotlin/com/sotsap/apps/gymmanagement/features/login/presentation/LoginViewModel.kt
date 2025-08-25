@@ -2,8 +2,10 @@ package com.sotsap.apps.gymmanagement.features.login.presentation
 
 import com.sotsap.apps.gymmanagement.core.extensions.isNotEmail
 import com.sotsap.apps.gymmanagement.core.lifecycle.BaseViewModel
+import com.sotsap.apps.gymmanagement.core.models.Response
 import com.sotsap.apps.gymmanagement.core.models.ifError
 import com.sotsap.apps.gymmanagement.core.models.ifSuccess
+import com.sotsap.apps.gymmanagement.core.models.ifSuccessAndThen
 import com.sotsap.apps.gymmanagement.core.utilities.Logger
 import com.sotsap.apps.gymmanagement.features.login.domain.LoginRepository
 import gymmanagement.composeapp.generated.resources.Res
@@ -89,15 +91,15 @@ class LoginViewModel(
      */
     suspend fun login(email: String, password: String) {
         update { it.copy(progress = true) }
-        loginRepository
-            .login(email, password)
-            .ifSuccess {
+        when (loginRepository.login(email, password)) {
+            is Response.Success -> {
                 update { it.copy(progress = false) }
                 update(newEvent = LoginEvents.OnLogin)
             }
-            .ifError {
+            is Response.Error -> {
                 update { it.copy(progress = false) }
             }
+        }
     }
 
     /**

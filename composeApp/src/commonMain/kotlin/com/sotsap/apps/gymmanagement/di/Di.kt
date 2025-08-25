@@ -7,6 +7,7 @@ import com.sotsap.apps.gymmanagement.features.login.data.LoginRepositoryImpl
 import com.sotsap.apps.gymmanagement.features.login.domain.LoginRepository
 import com.sotsap.apps.gymmanagement.features.login.presentation.LoginViewModel
 import com.sotsap.apps.gymmanagement.modes.admin.home.features.home.host.presentation.AdminHomeHostViewModel
+import com.sotsap.apps.gymmanagement.modes.admin.home.features.home.profile.presentation.ProfileAdminViewModel
 import com.sotsap.apps.gymmanagement.modes.admin.home.navigation.adminHomeNavigationItems
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
@@ -81,4 +82,5 @@ private val loginModule = module {
  */
 private val adminHostModule = module {
     factory { AdminHomeHostViewModel() }
+    factory { ProfileAdminViewModel(get()) }
 }
